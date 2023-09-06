@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models,fields,api
+from odoo.exceptions import UserError
 
 
 class estateProperty(models.Model):
@@ -43,3 +44,9 @@ class estateProperty(models.Model):
 
     def action_property_cancel(self):
         self.state = 'canceled'
+
+    def unlink(self):
+        for record in self:
+            if record.state != 'new' and record.state != 'canceled':
+                raise UserError("Only New and Canceled Properties can be deleted!")
+        return super().unlink()
