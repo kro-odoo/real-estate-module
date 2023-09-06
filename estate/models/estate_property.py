@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools.float_utils import float_compare, float_is_zero
 
 
 class estateProperty(models.Model):
@@ -26,3 +28,24 @@ class estateProperty(models.Model):
     buyer_id = fields.Many2one('res.partner', string="Buyer", copy=False, readonly=True)
     offer_ids=fields.One2many('estate.property.offer','property_id')
     tag_ids = fields.Many2many('estate.property.tag','property_tags_rel','tag_id','property_id', string="Tags")
+
+    #computed Fields
+    best_offer = fields.Float(compute="_compute_best_offer", default=0)
+
+    @api.depends('offer_ids.price')
+    def _compute_best_offer(self):
+        for record in self:
+            record.best_offer = max(record.offer_ids.mapped('price'), default=0)
+
+    # SQL Constraints
+    _sql_constraints = [
+        ('check_expected_price', 'CHECK(expected_price >= 0)', 'The expected Price must be strictly positive!'),
+        ('check_selling_price', 'CHECK(selling_price >=0)', 'The Selling Price must be positive!')
+    ]
+
+    # Python Constraints
+    @api.constrains('expected_price', 'selling_price')
+    def _check_expected_price(self):
+        for record in self:
+            if not float_is_zero(record.selling_price, precision_digits = 2) and float_compare(record.selling_price, record.expected_price * 0.9, precision_digits=2) == -1:
+                raise ValidationError("The selling price must be 90 % of Expected Price")
