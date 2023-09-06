@@ -49,3 +49,18 @@ class estateProperty(models.Model):
         for record in self:
             if not float_is_zero(record.selling_price, precision_digits = 2) and float_compare(record.selling_price, record.expected_price * 0.9, precision_digits=2) == -1:
                 raise ValidationError("The selling price must be 90 % of Expected Price")
+
+    # Action Methods
+    def action_property_sold(self):
+        for record in self:
+            if record.state == 'canceled':
+                raise UserError("Canceled Properties cannot be sold")
+            record.state = 'sold'
+        return True
+
+    def action_property_cancel(self):
+        for record in self:
+            if record.state == 'sold':
+                raise UserError("Sold Properties cannot be canceled")
+            record.state = 'canceled'
+        return True

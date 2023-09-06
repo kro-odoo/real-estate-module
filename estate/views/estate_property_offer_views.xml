@@ -14,6 +14,8 @@
             <tree string="Offers" editable="bottom" decoration-success="status == 'accepted'" decoration-danger="status == 'refused'">
                 <field name="price"/>
                 <field name="partner_id"/>
+                <button name="action_offer_accepted" title="Accept" icon="fa-check" type="object" attrs="{'invisible': [('status', '!=', False)]}" />
+                <button name="action_offer_rejected" title="Reject" icon="fa-times" type="object" attrs="{'invisible': [('status', '!=', False)]}" />
                 <field name="status"/>
             </tree>
         </field>
