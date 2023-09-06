@@ -5,7 +5,7 @@ from odoo import http
 class Properties(http.Controller):
     @http.route('/estate', website=True)
     def description(self):
-        Properties = http.request.env['estate.property'].search([])
+        properties = http.request.env['estate.property'].search([])
         return http.request.render('estate.index', {
-            'property': Properties
+            'properties': properties
         })
