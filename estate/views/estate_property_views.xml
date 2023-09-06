@@ -17,6 +17,9 @@
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <tree decoration-success="state in ['offer_received', 'offer_accepted']" decoration-danger="state == 'canceled'">
+                <header>
+                    <button name="%(estate_property_wizard_action)d" type="action" string="Add offer" />
+                </header>
                 <field name="name"/>
                 <field name="salesperson_id"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field':'Color', 'no_create':True}"/>
