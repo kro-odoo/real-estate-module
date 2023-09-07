@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models,fields,api
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError,ValidationError
+from odoo.tools.float_utils import float_compare
 
 
 class estateProperty(models.Model):
@@ -50,3 +51,16 @@ class estateProperty(models.Model):
             if record.state != 'new' and record.state != 'canceled':
                 raise UserError("Only New and Canceled Properties can be deleted!")
         return super().unlink()
+
+     # SQL Constraints
+    _sql_constraints = [
+        ('check_expected_price', 'CHECK(expected_price >= 0)', 'The expected Price must be strictly positive!'),
+        ('check_selling_price', 'CHECK(selling_price >=0)', 'The Selling Price must be positive!')
+    ]
+
+    # Python Constraints
+    @api.constrains('expected_price', 'selling_price')
+    def _check_expected_price(self):
+        for record in self:
+            if record.offer_ids and record.selling_price < record.expected_price:
+                raise ValidationError("The Selling price must higher than Expected price")
