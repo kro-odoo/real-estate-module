@@ -78,4 +78,28 @@
         </field>
     </record>
 
+    <!-- Kanban view -->
+
+    <record id="estate_property_view_kanban" model="ir.ui.view">
+        <field name="name">estate.property.view.kanban</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="state"/>
+                <template>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <strong><field name="name"/></strong>
+                            <div>
+                                Expected Price: <field name="expected_price"/>
+                            </div>
+                            <div>
+                                Selling Price: <field name="selling_price"/>
+                            </div>
+                        </div>
+                    </t>
+                </template>
+            </kanban>
+        </field>
+    </record>
 </odoo>
