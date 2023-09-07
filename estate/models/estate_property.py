@@ -30,10 +30,16 @@ class estateProperty(models.Model):
     tag_ids = fields.Many2many('estate.property.tag','property_tags_rel','tag_id','property_id', string="Tags")
 
     # Compute field
-
     best_offer = fields.Float(string="Best Offers", compute="_compute_best_offer")
 
     @api.depends('offer_ids.price')
     def _compute_best_offer(self):
         for record in self:
-            record.best_offer = max(record.offer_ids.mapped('price'))
+            record.best_offer = max(record.offer_ids.mapped('price'), default=0)
+
+    # Actions
+    def action_property_sold(self):
+        self.state = 'sold'
+
+    def action_property_cancel(self):
+        self.state = 'canceled'

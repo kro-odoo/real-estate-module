@@ -36,6 +36,8 @@
             <form>
                 <header>
                     <field name="state" widget="statusbar"/>
+                    <button name="action_property_sold" string="Sold" type="object" states="offer_accepted" />
+                    <button name="action_property_cancel" string="Cancel" type="object" states="new,offer_received,offer_accepted"/>
                 </header>
                 <sheet>
                     <label for="name"/>
@@ -60,6 +62,8 @@
                                 <tree>
                                     <field name="price"/>
                                     <field name="partner_id"/>
+                                    <button name="action_offer_accepted" title="Accept" icon="fa-check" type="object" attrs="{'invisible': [('status', '!=', False)]}"/>
+                                    <button name="action_offer_rejected" title="Reject" icon="fa-times" type="object" attrs="{'invisible': [('status', '!=', False)]}"/>
                                     <field name="status"/>
                                 </tree>
                                 <form>
